@@ -3100,25 +3100,37 @@ other, from this software.</p>
    :remove 'nstools.ns/remove-from-ns
    :require 'clojure.core/require
    :use 'clojure.core/use})</pre></td></tr><tr><td class="docs"><p>Sets <em>ns</em> to the namespace named by name (unevaluated), creating it
-  if needed.  references can be zero or more of: (:refer-clojure ...)
-  (:like ...) (:require ...) (:use ...) (:import ...) (:load ...) (:gen-class)
-  with the syntax of refer-clojure/like/require/use/import/load/gen-class
-  respectively, except the arguments are unevaluated and need not be
-  quoted. (:gen-class ...), when supplied, defaults to :name
-  corresponding to the ns name, :main true, :impl-ns same as ns, and
-  :init-impl-ns true. All options of gen-class are
-  supported. The :gen-class directive is ignored when not
-  compiling. If :gen-class is not supplied, when compiled only an
-  nsname__init.class will be generated. If :refer-clojure is not used, a
-  default (refer 'clojure) is used.  Use of ns is preferred to
-  individual calls to in-ns/require/use/import:</p>
+  if needed. References can be zero or more of:</p>
 
-<p>  (ns+ foo.bar
-    (:refer-clojure :exclude [ancestors printf])
-    (:require (clojure.contrib sql sql.tests))
-    (:use (my.lib this that))
-    (:import (java.util Date Timer Random)
-             (java.sql Connection Statement)))</p>
+<ul>
+<li><code>(:refer-clojure ...)</code></li>
+<li><code>(:like ...)</code></li>
+<li><code>(:require ...)</code></li>
+<li><code>(:use ...)</code></li>
+<li><code>(:import ...)</code></li>
+<li><code>(:load ...)</code></li>
+<li><p><code>(:gen-class)</code></p>
+
+<p>With the syntax of refer-clojure/like/require/use/import/load/gen-class
+respectively, except the arguments are unevaluated and need not be
+quoted. <code>(:gen-class ...)</code>, when supplied, defaults to <code>:name</code>
+corresponding to the <code>ns</code> name, <code>:main true</code>, <code>:impl-ns same as ns</code>, and
+<code>:init-impl-ns true</code>. All options of <code>gen-class</code> are
+supported. The <code>:gen-class</code> directive is ignored when not
+compiling. If <code>:gen-class</code> is not supplied, when compiled only an
+<code>nsname__init.class</code> will be generated. If <code>:refer-clojure</code> is not used, a
+default <code>(refer 'clojure)</code> is used. Use of <code>ns</code> is preferred to
+individual calls to in-ns/require/use/import:</p>
+
+<p>```clojure
+(ns+ foo.bar
+(:refer-clojure :exclude [ancestors printf])
+(:require (clojure.contrib sql sql.tests))
+(:use (my.lib this that))
+(:import (java.util Date Timer Random)
+         (java.sql Connection Statement)))
+```</p></li>
+</ul>
 
 <p>The ns+ macro is not very different from clojure.core/ns. The only
 functional difference is that in the presence of a :like or :clone clause it

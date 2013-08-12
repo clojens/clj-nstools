@@ -2,6 +2,7 @@
 ; then remove + and - (from clojure.core)
 
 (clojure.core/use 'nstools.ns)
+
 (ns+ bar
   (:clone foo)
   (:remove + -))
