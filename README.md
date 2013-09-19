@@ -15,18 +15,41 @@ Nstools is an attempt to provide a solution: it permits any namespace to serve
 as a template for constructing other namespaces. An enhanced version of the ns
 macro, `ns+`, adds the clauses `like`, `clone` and `remove`.
 
+## Clojure native forms
+
+### Example Lib
+
+A simple lib with embedded explanations:
+
+```clojure
+(ns com.my-company.clojure.examples.my-utils
+  (:import java.util.Date)
+  (:use [clojure.contrib.def :only (defvar-)])
+  (:require [clojure.contrib.shell-out :as shell]))
+```
+
+* The ns form names the lib's namespace and declares its dependencies. Based on its name, this lib must be contained in a Java resource at the classpath-relative path: `com/my_company/clojure/examples/my_utils.clj` (note the translations from period to slash and hyphen to underscore).
+* The `:import` clause declares this lib's use of java.util.Date and makes it available to code in this lib using its unqualified name.
+* The `:use` clause declares a dependency on the clojure.contrib.def lib for its defvar- function only. defvar- may be used in this lib's code using its unqualified name.
+* The `:require` clause declares a dependency on the clojure.contrib.shell-out lib and enables using its members using the shorter namespace alias shell.
+
+### Prefix Lists
+
+It's common for a lib to depend on several other libs whose full names share a common prefix. In calls to require and use (and in :require and :use clauses within an ns form), the common prefix can be extracted and provided once using a prefix list. For example, these two forms are equivalent:
+
+`(require 'clojure.contrib.def 'clojure.contrib.except 'clojure.contrib.sql)`
+`(require '(clojure.contrib def except sql))`
+
 ## Usage
 
 Suppose you have a namespace `foo` that serves as the template:
 
 ```clojure
 (ns foo
-  (:refer-clojure :exclude [read read-string alter commute ref-set ensure])
   (:require (clojure [zip :as zip]
+                     [string :as string]
                      [repl :refer [doc source dir]]
-                     [walk :as walk]
-                     [edn :refer [read read-string]]
-                     [pprint :refer [pprint print-table cl-format]])
+                     [walk :as walk])
             [clojure.java.shell :as shell])
   (:import (java.io InputStream)))
 ```
@@ -37,11 +60,11 @@ clauses in `foo`, including aliases defined by `:require ... :as`:
 
 ```clojure
 (clojure.core/require '[nstools.ns :refer [ns+]])
+
 (ns+ bar
   (:like foo))
 
-; Use the alias `shell`
-(shell/sh "echo" "Hello world")
+(string/reverse "hello world")
 ```
 
 A `:clone` clause is the same as `:like` followed by `:use` for the same namespace.
