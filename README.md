@@ -2,18 +2,11 @@
 
 ## Introduction
 
-A typical situation in a Clojure project is that several namespaces
-start with the same combination of `use`-`require`-`import` clauses, or at least
-have much of these references to the outside world in common. However,
-Clojure currently has no way to define a combination of external
-references once and then re-use and extend it in individual
-namespaces.
+A typical situation in a Clojure project is that several namespaces start with the same combination of `use`-`require`-`import` clauses, or at least have much of these references to the outside world in common. However, Clojure currently has no way to define a combination of external references once and then re-use and extend it in individual namespaces.
 
 ## Features
 
-Nstools is an attempt to provide a solution: it permits any namespace to serve
-as a template for constructing other namespaces. An enhanced version of the ns
-macro, `ns+`, adds the clauses `like`, `clone` and `remove`.
+Nstools is an attempt to provide a solution: it permits any namespace to serve as a template for constructing other namespaces. An enhanced version of the ns macro, `ns+`, adds the clauses `like`, `clone` and `remove`.
 
 ## Example
 
@@ -29,9 +22,7 @@ Suppose you have a namespace `foo` that serves as the template:
   (:import (java.io InputStream)))
 ```
 
-You can then create a namespace `bar` and make it `like foo`. This
-takes over all the references created by the `use`, `require`, and `import`
-clauses in `foo`, including aliases defined by `:require ... :as`:
+You can then create a namespace `bar` and make it `like foo`. This takes over all the references created by the `use`, `require`, and `import` clauses in `foo`, including aliases defined by `:require ... :as`:
 
 ```clojure
 (clojure.core/require '[nstools.ns :refer [ns+]])
@@ -42,26 +33,26 @@ clauses in `foo`, including aliases defined by `:require ... :as`:
 (string/reverse "hello world")
 ```
 
+## Clauses
+
+### :clone
+
 A `:clone` clause is the same as `:like` followed by `:use` for the same namespace.
 
-A `:remove` clause makes it possible to remove references from a
-namespace. It doesn't matter if those references were created by
-`:like`, `:clone`, or `:use`. The references need not even exist. It is thus
-possible to list in a `:remove` clause all symbols that will be defined
-in the namespace later on, guaranteeing that there will be no name
-clashes with references to other namespaces, in particular if symbols
-are added to later versions of these namespaces.
+### :remove
 
-The `:from` clause provides an alternative cleaner syntax for the
-functionality offered by `:use`. The format is `(:from namespace sym1 sym2 ...)`,
-which is equivalent to `(:use [namespace :only (sym1 sym2 ...)])`.
-It is in fact not fully equivalent, because `:from` allows the specified symbols
-to overwrite previously existing references. Another format, to be used with caution,
-is `(:from namespace :all)`, which is equivalent to `(:use namespace)`.
+A `:remove` clause makes it possible to remove references from a namespace. It doesn't matter if those references were created by `:like`, `:clone`, or `:use`. The references need not even exist. It is thus possible to list in a `:remove` clause all symbols that will be defined in the namespace later on, guaranteeing that there will be no name clashes with references to other namespaces, in particular if symbols are added to later versions of these namespaces.
 
-## A word on Clojure native clauses
+### :from
 
-### Example [src: `Clojure official web site`](http://clojure.org/libs)
+The `:from` clause provides an alternative cleaner syntax for the functionality offered by `:use`. The format is `(:from namespace sym1 sym2 ...)`, which is equivalent to `(:use [namespace :only (sym1 sym2 ...)])`.
+
+It is in fact not fully equivalent, because `:from` allows the specified symbols to overwrite previously existing references. Another format, to be used with caution, is `(:from namespace :all)`, which is equivalent to `(:use namespace)`.
+
+## Clojure native clauses
+
+### Example
+> Source: [`Clojure official public web site`](http://clojure.org/libs)
 
 A simple lib with embedded explanations:
 
@@ -76,6 +67,8 @@ A simple lib with embedded explanations:
 * The `:import` clause declares this lib's use of java.util.Date and makes it available to code in this lib using its unqualified name.
 * The `:use` clause declares a dependency on the clojure.contrib.def lib for its defvar- function only. defvar- may be used in this lib's code using its unqualified name.
 * The `:require` clause declares a dependency on the clojure.contrib.shell-out lib and enables using its members using the shorter namespace alias shell.
+
+<small>Copyright 2007-2013 by Rich Hickey</small>
 
 ### Prefix Lists
 
