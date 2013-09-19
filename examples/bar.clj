@@ -10,4 +10,4 @@
 (prn (su/flatten [[1 2] [3 4]]))
 
 ; the following line should crash
-(prn (+ 2 3))
+;(prn (+ 2 3))
